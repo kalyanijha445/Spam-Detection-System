@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Email Spam Detector</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-light: #f5f6fa;
+            --text-light: #1f2d3d;
+            --bg-dark: #121212;
+            --text-dark: #f5f5f5;
+            --box-light: #ffffff;
+            --box-dark: #1f1f1f;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--bg-light);
+            color: var(--text-light);
+            transition: all 0.4s ease;
+        }
+
+        body.dark {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 60px;
+            background-color: white;
+            border-bottom: 1px solid #e0e0e0;
+            transition: background 0.4s;
+        }
+
+        body.dark nav {
+            background-color: #1e1e1e;
+            border-bottom: 1px solid #333;
+        }
+
+        .nav-left {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .nav-links a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: inherit;
+            font-weight: 500;
+        }
+
+        .nav-right button {
+            padding: 8px 16px;
+            border: 1px solid #333;
+            background: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        body.dark .nav-right button {
+            background: #333;
+            color: #eee;
+            border: 1px solid #eee;
+        }
+
+        .nav-right button:hover {
+            background: #f0f0f0;
+        }
+
+        body.dark .nav-right button:hover {
+            background: #444;
+        }
+
+        .hero {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 60px;
+            background: #fafafa;
+            flex-wrap: wrap;
+            transition: background 0.4s;
+        }
+
+        body.dark .hero {
+            background: #1a1a1a;
+        }
+
+        .hero-left {
+            max-width: 550px;
+        }
+
+        .hero-left h1 {
+            font-size: 48px;
+            line-height: 1.2;
+        }
+
+        .highlight {
+            background: #ffd600;
+            display: inline-block;
+            padding: 0 5px;
+        }
+
+        .hero-left p,
+        .hero-left .more-para {
+            margin: 20px 0;
+            color: #5f6c7b;
+        }
+
+        body.dark .hero-left p,
+        body.dark .more-para {
+            color: #ccc;
+        }
+
+        .hero-left .buttons {
+            margin-top: 20px;
+        }
+
+        .hero-left .buttons button {
+            margin-right: 15px;
+            padding: 12px 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: black;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid #333;
+        }
+
+        .hero-right img {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.4s;
+        }
+
+        .hero-right img:hover {
+            transform: scale(1.05);
+        }
+
+        .detector-box {
+            max-width: 700px;
+            margin: 40px auto;
+            background: white;
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: background 0.4s;
+        }
+
+        body.dark .detector-box {
+            background: var(--box-dark);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.08);
+        }
+
+        .detector-box h2 {
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .detector-box p {
+            text-align: center;
+            color: #666;
+        }
+
+        body.dark .detector-box p {
+            color: #aaa;
+        }
+
+        textarea {
+            width: 100%;
+            height: 130px;
+            padding: 15px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            resize: none;
+            background: #f9f9f9;
+            transition: all 0.3s;
+        }
+
+        body.dark textarea {
+            background: #2a2a2a;
+            color: #eee;
+            border: 1px solid #555;
+        }
+
+        button.submit {
+            margin-top: 20px;
+            width: 100%;
+            background: linear-gradient(135deg, #007bff, #0057ff);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .result {
+            margin-top: 20px;
+            background-color: #e0f7f4;
+            border-left: 5px solid #00b894;
+            padding: 14px;
+            font-weight: 600;
+            color: #00796b;
+            border-radius: 10px;
+        }
+
+        body.dark .result {
+            background-color: #263238;
+            border-left-color: #00e676;
+            color: #b2ff59;
+        }
+
+        .tips-section {
+            max-width: 700px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #f9f9f9;
+            border-left: 5px solid #007bff;
+            border-radius: 12px;
+        }
+
+        body.dark .tips-section {
+            background: #1e1e1e;
+            color: #e0e0e0;
+            border-left-color: #2196f3;
+        }
+
+        .tips-section h3 {
+            margin-bottom: 10px;
+        }
+
+        .tips-section ul {
+            list-style: disc;
+            padding-left: 20px;
+        }
+
+        .tips-section ul li {
+            margin-bottom: 8px;
+        }
+
+        footer {
+            margin-top: 60px;
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+            color: #888;
+            background: #ffffff;
+            border-top: 1px solid #ddd;
+            transition: background 0.4s, color 0.4s;
+        }
+
+        body.dark footer {
+            background: #1a1a1a;
+            color: #aaa;
+            border-top: 1px solid #444;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column;
+                padding: 40px 20px;
+            }
+
+            .hero-left h1 {
+                font-size: 36px;
+            }
+
+            nav {
+                flex-direction: column;
+                padding: 20px;
+            }
+
+            .nav-links {
+                margin: 10px 0;
+            }
+
+            .hero-right {
+                margin-top: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-left">SpamGuard</div>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">How It Works</a>
+            <a href="#">About</a>
+        </div>
+        <div class="nav-right">
+            <button onclick="toggleTheme()">Toggle Theme</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-left">
+            <h1>Scan emails smart.<br><span class="highlight">Detect spam fast.</span><br>With ML.</h1>
+            <p>Use our intelligent spam detection tool to keep your inbox clean and safe.</p>
+            <p class="more-para">Our machine learning engine has been trained on thousands of spam emails to help you avoid threats and stay secure.</p>
+            <div class="buttons">
+                <button class="btn-primary">Check Spam</button>
+                <button class="btn-secondary" onclick="toggleTheme()">Toggle Theme</button>
+            </div>
+        </div>
+        <div class="hero-right">
+            <img src="{{ url_for('static', filename='image.png') }}" alt="Illustration">
+        </div>
+    </section>
+
+    <!-- Spam Detection Form -->
+    <div class="detector-box">
+        <h2>📨 Email Spam Detector</h2>
+        <p>Paste your email message and detect if it's spam using our smart AI engine.</p>
+        <form method="POST">
+            <textarea name="message" placeholder="Type or paste your message here..." required>{{ message }}</textarea>
+            <button type="submit" class="submit">🔍 Detect Spam</button>
+        </form>
+        {% if result %}
+        <div class="result">{{ result }}</div>
+        {% endif %}
+    </div>
+
+    <!-- Tips Section -->
+    <div class="tips-section">
+        <h3>💡 Tips to Avoid Spam Emails:</h3>
+        <ul>
+            <li>Never click on suspicious links.</li>
+            <li>Check the sender’s email address carefully.</li>
+            <li>Use a spam filter or intelligent tool like SpamGuard.</li>
+            <li>Report spam to your email provider.</li>
+        </ul>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2025 SpamGuard. All rights reserved.
+    </footer>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+        }
+    </script>
+</body>
+</html>
